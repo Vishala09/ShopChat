@@ -13,7 +13,6 @@ function Chat({name}) {
     var nameFromParam=params.name;
     if(name===undefined)
     {
-        console.log(name,nameFromParam);
         name=nameFromParam;
     }
     const [message, setMessage] = useState("");
@@ -29,22 +28,18 @@ function Chat({name}) {
     // },[]);
     useEffect(() => {
       socket.on("getUsers", users => {
-        console.log("gettingusers",users);
         setUsers(users);
       });
     
         socket.on("chatData", message => {
           setChat(messages => [...messages, message]);
-          console.log('chat',chatRef);
           //chatRef.current.scrollIntoView({ behavior: 'smooth' })
           chatRef.current.scrollTop = chatRef.current.scrollHeight;
         });
 
         socket.on("getItems", item => {
           setChat(items => [...items,item])
-             //console.log('items',item,chat);
-             chatRef.current.scrollTop = chatRef.current.scrollHeight;
-             //console.log(chatRef.current.scrollTop,chatRef.current.scrollHeight)
+          chatRef.current.scrollTop = chatRef.current.scrollHeight;
         });  
         
       }, []);

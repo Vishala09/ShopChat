@@ -19,6 +19,7 @@ function Shopchat() {
           console.log("gettingusers",users);
           if(users.some(person => person.name === name) === false)
           {
+                //console.log("Checks if user has logged in if the url is given directly given instead of coming from welcome page")
                 alert("Please Login First");
                 history.push('/');
           }

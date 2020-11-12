@@ -17,7 +17,6 @@ function Shop({name}) {
     var nameFromParam=params.name;
     if(name===undefined)
     {
-        console.log(name,nameFromParam);
         name=nameFromParam;
     }
     const [contact, setContact] = useState("");
@@ -28,10 +27,10 @@ function Shop({name}) {
     const dateRef=useRef( null); const contactRef=useRef(null);
     const submit = () => {
         let items=getSelectedValues();
-        console.log('err',showItemsErr);
         if(items.length!=0 && showContactErr !=true)
         {
             let type='item';
+            console.log("Emitting items",name,contact,items,delivery,type);
             socket.emit('items', { name,contact,items,delivery,type });
         }
         else
@@ -53,9 +52,7 @@ function Shop({name}) {
         }
         if(result.length === 0)
         {
-            console.log('len',result.length)
             setShowItemsErr(true);
-            console.log(showItemsErr);
         }
         else
         {
@@ -82,7 +79,6 @@ function Shop({name}) {
         var myDate = new Date(dateString);
         var today = new Date();
         if ( myDate < today ) { 
-            console.log('err future')
             setShowDateErr(true);
             return false;
         }
@@ -91,7 +87,6 @@ function Shop({name}) {
             setShowDateErr(true);
             return false;
         }
-        console.log(date,dateString,dateString === "" )
         setShowDateErr(false);
         return true;
     }

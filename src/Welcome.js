@@ -15,7 +15,6 @@ function Welcome() {
     const [users, setUsers] = useState([]);
     useEffect(() => {
         socket.on("getUsers", users => {
-            //console.log(users);
           setUsers(users);
         });
       },[]);
@@ -23,7 +22,7 @@ function Welcome() {
     const history = useHistory();
     let goToChat = () => {
         
-        console.log('check in users',users,users.some(person => person.name === name));
+        //console.log('check in users',users,users.some(person => person.name === name));
         if(name=="")
         {
             console.log("Please enter your name!")
