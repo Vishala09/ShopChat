@@ -1,0 +1,15 @@
+.form{
+    display: flex;
+    flex-direction: column;
+    background-color: aliceblue;
+    width:80%;
+    margin:auto;
+    height:500px;
+    overflow: auto;
+    justify-content: space-between;
+}
+
+.err{
+    color: red;
+    font-style: italic;
+}
