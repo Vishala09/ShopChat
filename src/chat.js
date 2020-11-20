@@ -19,7 +19,7 @@ function Chat({name}) {
     //const [name, setName] = useState("");
     const [users, setUsers] = useState([]);
     const [chat, setChat] = useState([]);
-    const chatRef= useRef(null);
+   // const chatRef= useRef(null);
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -32,14 +32,22 @@ function Chat({name}) {
       });
     
         socket.on("chatData", message => {
-          setChat(messages => [...messages, message]);
+         // console.log('messages',message);
+         // setChat(messages => [...messages, message]);
+          setChat(message);
           //chatRef.current.scrollIntoView({ behavior: 'smooth' })
-          chatRef.current.scrollTop = chatRef.current.scrollHeight;
+          let chatRef=document.getElementById('chatref');
+          if(chatRef)
+          chatRef.scrollTop = chatRef.scrollHeight;
         });
 
         socket.on("getItems", item => {
-          setChat(items => [...items,item])
-          chatRef.current.scrollTop = chatRef.current.scrollHeight;
+          //setChat(items => [...items,item]);
+          setChat(item);
+          //console.log('item',item)
+          let chatRef=document.getElementById('chatref');
+          if(chatRef)
+          chatRef.scrollTop = chatRef.scrollHeight;
         });  
         
       }, []);
@@ -135,12 +143,13 @@ function Chat({name}) {
         <div>
             <div className="nom">
                Welcome {name} , Number of messages : {chat.length} <span>&nbsp;</span> 
+               <br></br>
                <Button onClick={handleShow} variant="danger">Participants</Button>
-               <a href={"/chat/"+name} target="_blank">  <Button variant="primary">Open in new tab</Button> </a>
+               <a href={"/chat/"+name} target="_blank">  <Button variant="primary">New tab</Button> </a>
              </div>
              <div style={{}}>
                 <div>
-                  <div  className="chat_screen" ref={chatRef}>
+                  <div  className="chat_screen"  id="chatref">
                       <div>
                             {renderChat()}
                       </div>

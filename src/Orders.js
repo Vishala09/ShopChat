@@ -8,30 +8,39 @@ import './shop.css';
 import {Link,useHistory,useParams} from "react-router-dom";
 
 import products from './products.json';
+import Popup from './Popup';
 const socket = io("http://localhost:4000", {
   transports: ["websocket", "polling"]
 });
-function Shop({name}) {
-   // const [custName, setCustName] = useState("");
-    const params = useParams();
-    var nameFromParam=params.name;
-    if(name===undefined)
-    {
-        name=nameFromParam;
-    }
+function Orders() {
+   
     const [contact, setContact] = useState("");
+    const [name, setName] = useState("");
+    const [show, setShow] = useState(false);
     const [delivery, setDelivery] = useState("");
     const [showContactErr, setShowContactErr] = useState(null);
     const [showItemsErr, setShowItemsErr] = useState(null);
     const [showDateErr, setShowDateErr] = useState(null);
+    const [nameErr, setNameErr] = useState(null)
+    const [initialName, setInitialName] = useState(false)
     const dateRef=useRef( null); const contactRef=useRef(null);
+    const setShowFromChat = (value) => {
+        setShow(value);
+    }
     const submit = () => {
         let items=getSelectedValues();
-        if(items.length!=0 && showContactErr !=true)
+        if(items.length!=0 && showContactErr !=true && name.length>=3)
         {
             let type='item';
             console.log("Emitting items",name,contact,items,delivery,type);
             socket.emit('items', { name,contact,items,delivery,type });
+            if(initialName === false)
+            {
+                socket.emit('name', { name });
+            }
+            setInitialName(true);
+            setShow(true);
+            console.log('show',show)
         }
         else
         {
@@ -73,6 +82,12 @@ function Shop({name}) {
             setShowContactErr(true);
         }
     }
+    function validateName(name){
+        if(name.length<3)
+        {
+            setNameErr(true);
+        }
+    }
 
     function validateDate(date) {
         var dateString = date;
@@ -98,9 +113,11 @@ function Shop({name}) {
                     <InputGroup.Prepend>
                     <InputGroup.Text id="inputGroup-sizing-lg">Customer Name</InputGroup.Text>
                     </InputGroup.Prepend>
-                    <FormControl value={name}  disabled={true} aria-label="Large" aria-describedby="inputGroup-sizing-sm" />
+                    <FormControl value={name} onChange={(e) => {setName(e.target.value);validateName(e.target.value)}}  aria-label="Large" aria-describedby="inputGroup-sizing-sm" />
                 </InputGroup>
-                <p></p>
+                {
+                   nameErr && name.length<3 && <p class="err">Name's length should be greater than 3</p>
+                }
                 <InputGroup size="lg">
                     <InputGroup.Prepend>
                     <InputGroup.Text id="inputGroup-sizing-lg">Contact Number</InputGroup.Text>
@@ -139,9 +156,10 @@ function Shop({name}) {
                     showDateErr && <p class="err">Please select a future date</p>
                 }
                 <Button onClick={(e) => {submit(e);validatePhone(contact);validateDate(delivery)}}  variant="primary">Submit</Button>
+               {show && <Popup setShowHandler={setShowFromChat} showValue={show} name={name} />} 
             </div>
         </div>
     )
 }
 
-export default Shop;
+export default Orders;
